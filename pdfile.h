@@ -209,4 +209,35 @@ class Record {
         char _data[4];
 };
 
+// Taken from mongo/db/storage/data_file.h
+
+/*  a datafile - i.e. the "dbname.<#>" files :
+
+          ----------------------
+          DataFileHeader
+          ----------------------
+          Extent (for a particular namespace)
+            Record
+            ...
+            Record (some chained for unused space)
+          ----------------------
+          more Extents...
+          ----------------------
+    */
+class DataFileHeader {
+public:
+    int version;
+    int versionMinor;
+    int fileLength;
+    DiskLoc unused; /* unused is the portion of the file that doesn't belong to any allocated extents. -1 = no more */
+    int unusedLength;
+    DiskLoc freeListStart;
+    DiskLoc freeListEnd;
+    char reserved[8192 - 4*4 - 8*3];
+
+    char data[4]; // first extent starts here
+
+    enum { HeaderSize = 8192 };
+};
+
 #pragma pack()

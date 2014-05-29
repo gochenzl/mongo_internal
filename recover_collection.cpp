@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <string>
 #include "pdfile.h"
 #include "mmap.h"
@@ -18,14 +19,15 @@ static void writeData(FILE* fp, const char* buf, size_t size)
     }
 }
 
-// dump all record from specified collection
-// output file is collname.bson, it can be used by mongoresotre
-// Usage: ./dump dbpath dbname collname
+// when collection is dropped, all its extents will add to a free extent double linked list
+// extent has a field nsDiagnostic which save the name of namespace, we can use it to distinguish
+// if some extents were reused, these are lost
+// if collection has been renamed, it can't recovered
 int main(int argc, char* argv[])
 {
     if (argc < 4)
     {
-        printf("Usage: ./dump dbpath dbname collname\n");
+        printf("Usage: ./recover_collection dbpath dbname collname\n");
         return -1;
     }
 
@@ -33,10 +35,13 @@ int main(int argc, char* argv[])
     std::string dbname(argv[2]);
     std::string collname = dbname + "." + argv[3];
 
-    std::string nsFileName = dbpath + "/" + dbname + ".ns";
-    NamespaceDetails details;
-    if (!findNamespaceDetails(nsFileName, collname, details))
+    DatafileManager datafileManager(dbpath, dbname);
+    DataFileHeader* dataFileHeader = (DataFileHeader*)datafileManager.getView(0, 0);
+    if (dataFileHeader == NULL)
+    {
+        printf("datafile error!\n");
         return -1;
+    }
 
     std::string bsonFilename = std::string(argv[3]) + ".bson";
     FILE* fp = fopen(bsonFilename.c_str(), "wb");
@@ -46,17 +51,24 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    DatafileManager datafileManager(dbpath, dbname);
-    DiskLoc loc = details._firstExtent;
-    while (!loc.isNull())
+    DiskLoc freeExtentLoc = dataFileHeader->freeListStart;
+    while (!freeExtentLoc.isNull())
     {
-        Extent* extent = (Extent*)datafileManager.getView(loc._a, loc.ofs);
+        Extent* extent = (Extent*)datafileManager.getView(freeExtentLoc._a, freeExtentLoc.ofs);
         if (extent == NULL)
         {
             printf("datafile error!\n");
             return -1;
         }
 
+        if (strcmp(extent->nsDiagnostic.buf, collname.c_str()) != 0)
+        {
+            printf("find extent belong to namespace %s, ignore it\n", extent->nsDiagnostic.buf);
+            freeExtentLoc = extent->xnext;
+            continue;
+        }
+
+        freeExtentLoc = extent->xnext;
         DiskLoc recordLoc = extent->firstRecord;
         while (!recordLoc.isNull() && (recordLoc.ofs != DiskLoc::NullOfs))
         {
@@ -73,10 +85,9 @@ int main(int argc, char* argv[])
 
             recordLoc.ofs = record->_nextOfs;
         }
-
-        loc = extent->xnext;
     }
-    
+
     fclose(fp);
     return 0;
 }
+

@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "print_db_ns", "print_db_ns\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dump", "dump\dump.vcxproj", "{8D4D65E7-710D-48D3-88FD-EF96434BED81}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recover_collection", "recover_collection\recover_collection.vcxproj", "{86D5E3F6-DC3C-40CB-9AE1-17AD89E5B4AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{8D4D65E7-710D-48D3-88FD-EF96434BED81}.Debug|Win32.Build.0 = Debug|Win32
 		{8D4D65E7-710D-48D3-88FD-EF96434BED81}.Release|Win32.ActiveCfg = Release|Win32
 		{8D4D65E7-710D-48D3-88FD-EF96434BED81}.Release|Win32.Build.0 = Release|Win32
+		{86D5E3F6-DC3C-40CB-9AE1-17AD89E5B4AA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{86D5E3F6-DC3C-40CB-9AE1-17AD89E5B4AA}.Debug|Win32.Build.0 = Debug|Win32
+		{86D5E3F6-DC3C-40CB-9AE1-17AD89E5B4AA}.Release|Win32.ActiveCfg = Release|Win32
+		{86D5E3F6-DC3C-40CB-9AE1-17AD89E5B4AA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
