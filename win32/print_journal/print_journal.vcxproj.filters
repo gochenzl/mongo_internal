@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\print_journal.cpp" />
+    <ClCompile Include="..\..\mmap_win32.cpp" />
+    <ClCompile Include="..\..\snappy\snappy.cc">
+      <Filter>snappy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\snappy\snappy-sinksource.cc">
+      <Filter>snappy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\snappy\snappy-stubs-internal.cc">
+      <Filter>snappy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\util.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="snappy">
+      <UniqueIdentifier>{bacdcf00-569c-4837-b609-00ae6a5351e4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -20,7 +20,17 @@ set(recover_collection_SRCS
   recover_collection.cpp
   )
 
+set(print_journal_SRCS
+  mmap_posix.cpp
+  util.cpp
+  print_journal.cpp
+  snappy/snappy-stubs-internal.cc
+  snappy/snappy-sinksource.cc
+  snappy/snappy.cc
+  )
+
 set(CMAKE_CXX_FLAGS "-g -Wall")  
 add_executable(print_db_ns ${print_db_ns_SRCS})
 add_executable(dump ${dump_SRCS})
 add_executable(recover_collection ${recover_collection_SRCS})
+add_executable(print_journal ${print_journal_SRCS})
