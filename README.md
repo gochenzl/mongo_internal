@@ -1,4 +1,4 @@
-基于mongodb2.x.x版本  
+基于mongodb 2.x.x版本  
 
 ### dump
 导出一个collection的所有记录到文件collname.bson，可以被mongoresotre使用  
